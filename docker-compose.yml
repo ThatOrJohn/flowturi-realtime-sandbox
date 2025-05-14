@@ -1,0 +1,26 @@
+version: '3'
+services:
+  jobmanager:
+    image: flink:latest
+    ports:
+      - "8081:8081" # Flink Web UI
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    command: jobmanager
+
+  taskmanager:
+    image: flink:latest
+    depends_on:
+      - jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    command: taskmanager
+
+  websocket-bridge:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - ./bridge:/app
+    ports:
+      - "8082:8082"
+    command: sh -c "npm install && node bridge.js"
