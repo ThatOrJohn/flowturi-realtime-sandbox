@@ -72,7 +72,11 @@ Watches `stream.json` for changes and broadcasts updated Sankey data to WebSocke
 
 ### `synthetic.js`
 
-Writes realistic but random flow data to `stream.json` every second.
+Writes realistic but random flow data to `stream.json` every 0.5 seconds.
+
+#### 🧠 `tick`
+
+The `tick` field increments with every update and acts as a frame counter — useful for animations and time-based syncing in Flowturi Studio.
 
 ### `watch.js`
 
