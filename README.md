@@ -6,11 +6,11 @@ A self-contained Flink + WebSocket bridge + Flowturi Studio demo for real-time S
 
 ## 📦 Features
 
-* Apache Flink (optional future) streaming synthetic data generator
-* Node.js WebSocket bridge (serves data to Flowturi Studio)
-* Real-time data simulated by synthetic generator script
-* Docker Compose setup for local testing
-* Portable, no host installation required
+- Apache Flink (optional future) streaming synthetic data generator
+- Node.js WebSocket bridge (serves data to Flowturi Studio)
+- Real-time data simulated by synthetic generator script
+- Docker Compose setup for local testing
+- Portable, no host installation required
 
 ---
 
@@ -25,7 +25,8 @@ flowturi-realtime-sandbox/
 │   ├── package.json
 │   ├── bridge.js
 │   ├── synthetic.js
-│   └── stream.json
+│   ├── stream.json
+│   └── watch.js           # 🆕 WS viewer script
 └── README.md
 ```
 
@@ -49,13 +50,17 @@ docker-compose up
 3. Open the Flink dashboard (optional):
    ➡️ [http://localhost:8081](http://localhost:8081)
 
-4. Open Flowturi Studio, enter Real-Time mode, and connect to:
+4. Open Flowturi Studio (must support real-time mode) and connect to:
 
 ```
 ws://localhost:8082
 ```
 
-You should begin seeing a live-updating Sankey diagram driven by synthetic data.
+5. Or use a local watcher script:
+
+```bash
+node bridge/watch.js
+```
 
 ---
 
@@ -68,6 +73,25 @@ Watches `stream.json` for changes and broadcasts updated Sankey data to WebSocke
 ### `synthetic.js`
 
 Writes realistic but random flow data to `stream.json` every second.
+
+### `watch.js`
+
+Minimal client to connect and print all WebSocket data:
+
+```js
+const WebSocket = require("ws");
+const ws = new WebSocket("ws://localhost:8082");
+
+ws.on("open", () => console.log("✅ Connected"));
+ws.on("message", (data) => {
+  try {
+    const parsed = JSON.parse(data);
+    console.log(JSON.stringify(parsed, null, 2));
+  } catch (e) {
+    console.warn("⚠️ Bad message:", data.toString());
+  }
+});
+```
 
 ---
 
@@ -109,7 +133,7 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install
 RUN npm install npm-run-all
-COPY bridge.js stream.json synthetic.js ./
+COPY bridge.js stream.json synthetic.js watch.js ./
 CMD ["npm", "run", "start"]
 ```
 
@@ -131,20 +155,11 @@ CMD ["npm", "run", "start"]
   "scripts": {
     "generate": "node synthetic.js",
     "bridge": "node bridge.js",
-    "start": "run-p generate bridge"
+    "start": "run-p generate bridge",
+    "watch": "node watch.js"
   }
 }
 ```
-
----
-
-## 💡 Future Ideas
-
-* Multiple synthetic stream types
-* SSE support instead of WebSocket
-* Connect to real APIs (e.g. IoT sensor sim)
-* Live editing of Flink SQL from the frontend
-* Use Flink or Kafka later for distributed real-time ingestion
 
 ---
 
@@ -158,12 +173,11 @@ docker-compose down
 
 ## 🙌 Credits
 
-* [Flowturi](https://github.com/ThatOrJohn/flowturi)
-* Apache Flink
-* ws (WebSocket lib for Node.js)
-* npm-run-all
+- [Flowturi](https://github.com/ThatOrJohn/flowturi)
+- Apache Flink
+- ws (WebSocket lib for Node.js)
+- npm-run-all
 
 ---
 
 MIT License
-
