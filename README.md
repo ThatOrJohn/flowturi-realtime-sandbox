@@ -47,15 +47,6 @@ Once the sandbox is running, connect Flowturi Studio to:
 ws://localhost:8082
 ```
 
-### Resetting the Environment
-
-If you encounter issues with Docker networking or need to reset the environment:
-
-```bash
-# Performs a thorough reset of Docker containers, networks, and volumes
-./hardcore-reset.sh
-```
-
 ## Mode Differences
 
 ### File Mode Data Pattern
@@ -69,27 +60,6 @@ File mode generates a simpler data pattern with multiple layers:
 Flink mode simulates a data pipeline pattern:
 
 - Data Source → Processors → Analytics → Data Sink
-
-## Troubleshooting
-
-### Docker Network Issues
-
-If you encounter errors related to Docker networking (e.g., "network not found"), run:
-
-```bash
-./hardcore-reset.sh
-```
-
-This script performs a complete cleanup of Docker containers, networks, and volumes related to this project.
-
-### Switching Between Modes
-
-When switching between modes, it's recommended to first reset the environment:
-
-```bash
-./hardcore-reset.sh
-./run.sh [file|flink]
-```
 
 ## Development
 
