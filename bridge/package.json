@@ -1,7 +1,7 @@
 {
   "name": "flowturi-bridge",
   "version": "1.0.0",
-  "main": "bridge.js",
+  "main": "index.js",
   "dependencies": {
     "ws": "^8.0.0"
   },
@@ -9,9 +9,11 @@
     "npm-run-all": "^4.1.5"
   },
   "scripts": {
-    "generate": "node synthetic.js",
-    "bridge": "node bridge.js",
-    "start": "run-p generate bridge",
-    "watch": "node watch.js"
+    "generate:file": "node modes/file/synthetic.js",
+    "bridge:file": "node modes/file/bridge.js",
+    "bridge:flink": "node modes/flink/bridge.js",
+    "start:file": "run-p generate:file bridge:file",
+    "start:flink": "node modes/flink/bridge.js",
+    "watch": "node utils/watch.js"
   }
 }

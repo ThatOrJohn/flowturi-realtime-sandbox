@@ -1,0 +1,73 @@
+{
+    "job": {
+        "name": "Flowturi Synthetic Data Generator",
+        "description": "Generates synthetic data for Flowturi Sankey visualization",
+        "parameters": {
+            "interval": 1000,
+            "kafka.topic": "flowturi-data",
+            "kafka.bootstrap.servers": "kafka:9092"
+        }
+    },
+    "data": {
+        "nodes": [
+            {
+                "id": "data_source",
+                "label": "Data Source"
+            },
+            {
+                "id": "processor_1",
+                "label": "Processor 1"
+            },
+            {
+                "id": "processor_2",
+                "label": "Processor 2"
+            },
+            {
+                "id": "analytics_1",
+                "label": "Analytics 1"
+            },
+            {
+                "id": "analytics_2",
+                "label": "Analytics 2"
+            },
+            {
+                "id": "data_sink",
+                "label": "Data Sink"
+            }
+        ],
+        "linkTemplates": [
+            {
+                "source": "data_source",
+                "target": "processor_1"
+            },
+            {
+                "source": "data_source",
+                "target": "processor_2"
+            },
+            {
+                "source": "processor_1",
+                "target": "analytics_1"
+            },
+            {
+                "source": "processor_1",
+                "target": "analytics_2"
+            },
+            {
+                "source": "processor_2",
+                "target": "analytics_1"
+            },
+            {
+                "source": "processor_2",
+                "target": "analytics_2"
+            },
+            {
+                "source": "analytics_1",
+                "target": "data_sink"
+            },
+            {
+                "source": "analytics_2",
+                "target": "data_sink"
+            }
+        ]
+    }
+}

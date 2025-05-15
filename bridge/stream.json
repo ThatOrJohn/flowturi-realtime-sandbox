@@ -1,0 +1,81 @@
+{
+  "timestamp": "2025-05-15T01:30:39.057Z",
+  "tick": 7,
+  "nodes": [
+    {
+      "id": "source",
+      "label": "Source"
+    },
+    {
+      "id": "layer1a",
+      "label": "Layer 1A"
+    },
+    {
+      "id": "layer1b",
+      "label": "Layer 1B"
+    },
+    {
+      "id": "layer2a",
+      "label": "Layer 2A"
+    },
+    {
+      "id": "layer2b",
+      "label": "Layer 2B"
+    },
+    {
+      "id": "layer2c",
+      "label": "Layer 2C"
+    },
+    {
+      "id": "sink",
+      "label": "Sink"
+    }
+  ],
+  "links": [
+    {
+      "source": "source",
+      "target": "layer1a",
+      "value": 17
+    },
+    {
+      "source": "source",
+      "target": "layer1b",
+      "value": 22
+    },
+    {
+      "source": "layer1a",
+      "target": "layer2a",
+      "value": 13
+    },
+    {
+      "source": "layer1a",
+      "target": "layer2b",
+      "value": 33
+    },
+    {
+      "source": "layer1b",
+      "target": "layer2b",
+      "value": 21
+    },
+    {
+      "source": "layer1b",
+      "target": "layer2c",
+      "value": 20
+    },
+    {
+      "source": "layer2a",
+      "target": "sink",
+      "value": 12
+    },
+    {
+      "source": "layer2b",
+      "target": "sink",
+      "value": 31
+    },
+    {
+      "source": "layer2c",
+      "target": "sink",
+      "value": 8
+    }
+  ]
+}

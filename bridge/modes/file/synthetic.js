@@ -1,12 +1,13 @@
+// modes/file/synthetic.js
 const fs = require("fs");
 const path = require("path");
 
-const filePath = path.join(__dirname, "stream.json");
+const filePath = path.join(__dirname, "..", "..", "stream.json");
 
 let tick = 0;
 
 function generateFakeFlow() {
-  const timestamp = Date.now();
+  const timestamp = new Date().toISOString();
   const nodes = [
     { id: "source", label: "Source" },
     { id: "layer1a", label: "Layer 1A" },
@@ -68,8 +69,9 @@ function generateFakeFlow() {
   return { timestamp, tick, nodes, links };
 }
 
+console.log(`[synthetic] Starting data generation to ${filePath}`);
 setInterval(() => {
   const data = generateFakeFlow();
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-  console.log(`[synthetic.js] Tick ${tick++} written`);
+  console.log(`[synthetic] Tick ${tick++} written`);
 }, 1000);

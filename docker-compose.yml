@@ -1,5 +1,79 @@
 services:
   websocket-bridge:
-    build: ./bridge
+    build:
+      context: ./bridge
+      args:
+        - MODE=${ENV_MODE:-file}
     ports:
       - "8082:8082"
+    environment:
+      - MODE=${ENV_MODE:-file}
+      - START_MODE=${ENV_MODE:-file}
+    profiles:
+      - file
+      - flink
+    depends_on:
+      - ${ENV_MODE:-file}-dependencies
+
+  # Dummy service to handle dependencies in file mode
+  file-dependencies:
+    image: alpine:latest
+    command: echo "File mode - no dependencies needed"
+    profiles:
+      - file
+
+  # Dummy service to handle dependencies in flink mode
+  flink-dependencies:
+    image: alpine:latest
+    command: echo "Flink mode - waiting for dependencies"
+    depends_on:
+      - kafka
+      - jobmanager
+    profiles:
+      - flink
+
+  # Kafka and Zookeeper setup for Flink mode
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2181:2181"
+    profiles:
+      - flink
+
+  kafka:
+    image: bitnami/kafka:latest
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    profiles:
+      - flink
+
+  # Flink JobManager and TaskManager
+  jobmanager:
+    image: flink:latest
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    profiles:
+      - flink
+
+  taskmanager:
+    image: flink:latest
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    profiles:
+      - flink
